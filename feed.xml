@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-09-21T15:59:27+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Admindoc</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Lucian, medaey</name></author><entry><title type="html">Practical Guide to Ansible: File and Directory Operations</title><link href="http://localhost:4000/devops/2023/07/23/practical-guide-to-ansible-file-and-directory-operations.html" rel="alternate" type="text/html" title="Practical Guide to Ansible: File and Directory Operations" /><published>2023-07-23T00:00:00+02:00</published><updated>2023-07-23T00:00:00+02:00</updated><id>http://localhost:4000/devops/2023/07/23/practical-guide-to-ansible-file-and-directory-operations</id><content type="html" xml:base="http://localhost:4000/devops/2023/07/23/practical-guide-to-ansible-file-and-directory-operations.html"><![CDATA[<h1 id="practical-guide-to-ansible-file-and-directory-operations">Practical Guide to Ansible: File and Directory Operations</h1>
+
+<p>Ansible is an open-source IT automation tool that simplifies complex configuration, management, and application deployment. One area where Ansible particularly shines is file and directory operations. In this guide, we’ll explore how to create, delete, and manage files and directories using Ansible.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before proceeding, ensure you have installed Ansible and configured it with Python3 as per the guide provided earlier.</p>
+
+<h2 id="ansible-playbook-basics">Ansible Playbook Basics</h2>
+
+<p>Ansible playbooks are YAML files where you define your automation tasks. They provide a sequence of operations to be executed on a managed host. A playbook can have one or more ‘plays’, and each play can have one or more ‘tasks’.</p>
+
+<p>Let’s look at a basic playbook structure:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Task </span><span class="m">1</span>
+      <span class="s">...</span>
+</code></pre></div></div>
+
+<p>Here, <code class="language-plaintext highlighter-rouge">hosts: all</code> indicates that the tasks in this playbook will be run on all hosts in your inventory. Each task is represented by a <code class="language-plaintext highlighter-rouge">- name:</code> line followed by the actual command(s).</p>
+
+<p>Now, let’s delve into file and directory operations.</p>
+
+<h2 id="creating-files-with-ansible">Creating Files with Ansible</h2>
+
+<p>Ansible provides the <code class="language-plaintext highlighter-rouge">copy</code> module for creating files. You can use it to create a new file on your host machines. Here’s an example:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Create a file</span>
+      <span class="na">copy</span><span class="pi">:</span>
+        <span class="na">content</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Hello,</span><span class="nv"> </span><span class="s">World!"</span>
+        <span class="na">dest</span><span class="pi">:</span> <span class="s">/tmp/hello.txt</span>
+</code></pre></div></div>
+
+<p>This playbook creates a file at <code class="language-plaintext highlighter-rouge">/tmp/hello.txt</code> with the content <code class="language-plaintext highlighter-rouge">Hello, World!</code>. The <code class="language-plaintext highlighter-rouge">copy</code> module creates a new file and copies the content you specify to that file.</p>
+
+<h2 id="deleting-files-with-ansible">Deleting Files with Ansible</h2>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">file</code> module in Ansible to remove files. Here’s an example:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Delete a file</span>
+      <span class="na">file</span><span class="pi">:</span>
+        <span class="na">path</span><span class="pi">:</span> <span class="s">/tmp/hello.txt</span>
+        <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>
+</code></pre></div></div>
+
+<p>This playbook removes the file at <code class="language-plaintext highlighter-rouge">/tmp/hello.txt</code>. The <code class="language-plaintext highlighter-rouge">state: absent</code> ensures the file does not exist. If it does, Ansible will delete it.</p>
+
+<h2 id="creating-directories-with-ansible">Creating Directories with Ansible</h2>
+
+<p>To create directories, we again use the <code class="language-plaintext highlighter-rouge">file</code> module, but with <code class="language-plaintext highlighter-rouge">state: directory</code>. Here’s an example:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Create a directory</span>
+      <span class="na">file</span><span class="pi">:</span>
+        <span class="na">path</span><span class="pi">:</span> <span class="s">/tmp/my_folder</span>
+        <span class="na">state</span><span class="pi">:</span> <span class="s">directory</span>
+</code></pre></div></div>
+
+<p>This playbook ensures a directory exists at <code class="language-plaintext highlighter-rouge">/tmp/my_folder</code>. If it does not, Ansible will create it.</p>
+
+<h2 id="deleting-directories-with-ansible">Deleting Directories with Ansible</h2>
+
+<p>Deleting directories is the same as deleting files. You just specify the directory path:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Delete a directory</span>
+      <span class="na">file</span><span class="pi">:</span>
+        <span class="na">path</span><span class="pi">:</span> <span class="s">/tmp/my_folder</span>
+        <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>
+</code></pre></div></div>
+
+<p>This playbook will remove the directory at <code class="language-plaintext highlighter-rouge">/tmp/my_folder</code>. If the directory exists, Ansible will delete it.</p>
+
+<h2 id="changing-file-permissions-with-ansible">Changing File Permissions with Ansible</h2>
+
+<p>You can change file or directory permissions using the <code class="language-plaintext highlighter-rouge">mode</code> parameter:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Change file permissions</span>
+      <span class="na">file</span><span class="pi">:</span>
+        <span class="na">path</span><span class="pi">:</span> <span class="s">/tmp/hello.txt</span>
+        <span class="na">mode</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0644'</span>
+</code></pre></div></div>
+
+<p>This playbook will change the permissions of <code class="language-plaintext highlighter-rouge">/tmp/hello.txt</code> to <code class="language-plaintext highlighter-rouge">0644</code>.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Ansible provides simple and effective mechanisms to manage files and directories on remote hosts. Through its <code class="language-plaintext highlighter-rouge">file</code> and <code class="language-plaintext highlighter-rouge">copy</code> modules, you can control the state, content, and permissions of your files and directories.</p>
+
+<p>While we’ve covered the basics here, remember that Ansible is a powerful tool with many more capabilities. As you continue exploring Ansible, you’ll discover ways to manage complex configurations and automate repetitive tasks, making your IT management tasks more efficient and reliable.</p>
+
+<p>Happy Ansible-ing!</p>]]></content><author><name>Lucian, medaey</name></author><category term="devops" /><category term="ansible" /><category term="python" /><summary type="html"><![CDATA[Practical Guide to Ansible: File and Directory Operations]]></summary></entry><entry><title type="html">Setting Up Ansible with Python3</title><link href="http://localhost:4000/devops/2023/07/23/setting-up-ansible-with-python3.html" rel="alternate" type="text/html" title="Setting Up Ansible with Python3" /><published>2023-07-23T00:00:00+02:00</published><updated>2023-07-23T00:00:00+02:00</updated><id>http://localhost:4000/devops/2023/07/23/setting-up-ansible-with-python3</id><content type="html" xml:base="http://localhost:4000/devops/2023/07/23/setting-up-ansible-with-python3.html"><![CDATA[<h1 id="setting-up-ansible-with-python3">Setting Up Ansible with Python3</h1>
+
+<p>Ansible is an open-source automation tool that can automate various aspects of system administration such as configuration management, application deployment, and task automation. In this article, we will walk through the steps required to set up Ansible with Python3.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before we begin, ensure that you have the following installed on your system:</p>
+
+<ol>
+  <li>
+    <p>Python 3: Ansible is built with Python and you need it to run Ansible commands. You can check your Python version by running <code class="language-plaintext highlighter-rouge">python3 --version</code> in your terminal. If you do not have Python installed, follow the Python installation guide for your operating system.</p>
+  </li>
+  <li>
+    <p>A text editor: You’ll need this to create and edit Ansible playbooks. You can use any text editor you prefer, such as Vim, Nano, or Sublime Text.</p>
+  </li>
+  <li>
+    <p>A target machine: This is the machine you will be controlling with Ansible. It could be a remote server or a local virtual machine.</p>
+  </li>
+</ol>
+
+<h2 id="step-1-install-ansible">Step 1: Install Ansible</h2>
+<p>The installation of Ansible varies depending on the operating system.</p>
+
+<p>For Ubuntu, you can install Ansible using apt:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>ansible
+</code></pre></div></div>
+
+<p>For CentOS or RHEL, you can use yum:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>yum <span class="nb">install </span>ansible
+</code></pre></div></div>
+
+<p>For MacOS, you can use Homebrew:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>ansible
+</code></pre></div></div>
+
+<p>Check the installation by running <code class="language-plaintext highlighter-rouge">ansible --version</code>. This should display information about the installed Ansible version and its configuration.</p>
+
+<h2 id="step-2-configure-ansible">Step 2: Configure Ansible</h2>
+
+<p>Once installed, Ansible looks for a configuration file in several locations, in the following order:</p>
+
+<ul>
+  <li>ANSIBLE_CONFIG (environment variable if set)</li>
+  <li>ansible.cfg (in the current directory)</li>
+  <li>~/.ansible.cfg (in the home directory)</li>
+  <li>/etc/ansible/ansible.cfg</li>
+</ul>
+
+<p>If you want to configure Ansible for all users on the system, it’s best to edit <code class="language-plaintext highlighter-rouge">/etc/ansible/ansible.cfg</code>. However, if you want to configure it just for your user, creating <code class="language-plaintext highlighter-rouge">~/.ansible.cfg</code> would be a better choice.</p>
+
+<p>Ansible also uses a hosts file where it looks up the hosts to connect. By default, this file is located at <code class="language-plaintext highlighter-rouge">/etc/ansible/hosts</code>. You can change this in your configuration file or use the <code class="language-plaintext highlighter-rouge">-i</code> flag when running Ansible commands.</p>
+
+<p>An example of how to add hosts to the Ansible hosts file:</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[web]</span>
+<span class="err">192.168.1.10</span>
+<span class="err">192.168.1.11</span>
+
+<span class="nn">[db]</span>
+<span class="err">192.168.1.20</span>
+</code></pre></div></div>
+
+<p>Here, we’ve added two groups of hosts: <code class="language-plaintext highlighter-rouge">web</code> and <code class="language-plaintext highlighter-rouge">db</code>.</p>
+
+<h2 id="step-3-configure-python-interpreter">Step 3: Configure Python Interpreter</h2>
+
+<p>Ansible uses Python to execute its modules, and it will automatically detect and use Python2 if it is available. If you want to use Python3, you will need to explicitly configure it.</p>
+
+<p>To configure Ansible to use Python3, you can set the <code class="language-plaintext highlighter-rouge">ansible_python_interpreter</code> variable to the location of Python3 for a group or a host in your inventory file:</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[web]</span>
+<span class="err">192.168.1.10</span> <span class="py">ansible_python_interpreter</span><span class="p">=</span><span class="s">/usr/bin/python3</span>
+<span class="err">192.168.1.11</span> <span class="py">ansible_python_interpreter</span><span class="p">=</span><span class="s">/usr/bin/python3</span>
+
+<span class="nn">[db]</span>
+<span class="err">192.168.1.20</span> <span class="py">ansible_python_interpreter</span><span class="p">=</span><span class="s">/usr/bin/python3</span>
+</code></pre></div></div>
+
+<p>You can also set this variable globally in your <code class="language-plaintext highlighter-rouge">ansible.cfg</code> file:</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[defaults]</span>
+<span class="py">interpreter_python</span> <span class="p">=</span> <span class="s">/usr/bin/python3</span>
+</code></pre></div></div>
+
+<h2 id="step-4-testing-your-setup">Step 4: Testing Your Setup</h2>
+
+<p>With Ansible installed and configured, you can now try running a simple command on your hosts to see if everything works as expected:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible all <span class="nt">-m</span> ping
+</code></pre></div></div>
+
+<p>This command will use the <code class="language-plaintext highlighter-rouge">ping</code> module to test the connection to all hosts in your inventory. If everything is set up correctly, you should see a <code class="language-plaintext highlighter-rouge">pong</code> reply from each of them.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Setting up Ansible with Python3 might seem intimidating at first, but once you understand the process, it becomes straightforward. With Ansible, you can efficiently manage your infrastructure and automate repetitive tasks, and with Python3, you benefit from the latest features and improvements of the Python language.</p>
+
+<p>Remember that understanding and effectively using Ansible requires practice. Start by writing simple playbooks, and gradually incorporate more complex configurations as you become more comfortable with the tool.</p>
+
+<p>Happy automating!</p>]]></content><author><name>Lucian, medaey</name></author><category term="devops" /><category term="ansible" /><category term="python" /><summary type="html"><![CDATA[Setting Up Ansible with Python3]]></summary></entry><entry><title type="html">Managing Network Interfaces on Ubuntu</title><link href="http://localhost:4000/network/2023/07/21/managing-network-interfaces-on-ubuntu.html" rel="alternate" type="text/html" title="Managing Network Interfaces on Ubuntu" /><published>2023-07-21T00:00:00+02:00</published><updated>2023-07-21T00:00:00+02:00</updated><id>http://localhost:4000/network/2023/07/21/managing-network-interfaces-on-ubuntu</id><content type="html" xml:base="http://localhost:4000/network/2023/07/21/managing-network-interfaces-on-ubuntu.html"><![CDATA[<p>Managing network interfaces is a critical task in networking and system administration. Ubuntu, being one of the most popular Linux distributions, provides several command-line utilities for network interface management. This article will guide you on how to start, stop, or disconnect different interfaces in Ubuntu.</p>
+
+<h2 id="the-ip-command">The <code class="language-plaintext highlighter-rouge">ip</code> Command</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">ip</code> command is a powerful tool for network interface management in Ubuntu. It replaces the deprecated <code class="language-plaintext highlighter-rouge">ifconfig</code> command in modern Linux distributions.</p>
+
+<h3 id="start-an-interface">Start an Interface</h3>
+
+<p>To bring up or start a network interface, use the <code class="language-plaintext highlighter-rouge">ip link set up</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>ip <span class="nb">link set </span>eth0 up
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">eth0</code> with the name of your interface.</p>
+
+<h3 id="stop-an-interface">Stop an Interface</h3>
+
+<p>To bring down or stop a network interface, use the <code class="language-plaintext highlighter-rouge">ip link set down</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>ip <span class="nb">link set </span>eth0 down
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">eth0</code> with the name of your interface.</p>
+
+<h2 id="networkmanager-and-the-nmcli-command">NetworkManager and the <code class="language-plaintext highlighter-rouge">nmcli</code> Command</h2>
+
+<p>NetworkManager is the default network management tool for Ubuntu, and <code class="language-plaintext highlighter-rouge">nmcli</code> is its command-line counterpart. You can use <code class="language-plaintext highlighter-rouge">nmcli</code> to manage network connections and interfaces.</p>
+
+<h3 id="start-a-connection">Start a Connection</h3>
+
+<p>To start a network connection, use the <code class="language-plaintext highlighter-rouge">nmcli connection up</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmcli connection up <span class="s2">"Wired connection 1"</span>
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">"Wired connection 1"</code> with the name of your connection.</p>
+
+<h3 id="stop-a-connection">Stop a Connection</h3>
+
+<p>To stop a network connection, use the <code class="language-plaintext highlighter-rouge">nmcli connection down</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmcli connection down <span class="s2">"Wired connection 1"</span>
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">"Wired connection 1"</code> with the name of your connection.</p>
+
+<h3 id="disconnect-a-device">Disconnect a Device</h3>
+
+<p>To disconnect a device from all connections, use the <code class="language-plaintext highlighter-rouge">nmcli device disconnect</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmcli device disconnect eth0
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">eth0</code> with the name of your device.</p>
+
+<h2 id="the-ifup-and-ifdown-commands">The <code class="language-plaintext highlighter-rouge">ifup</code> and <code class="language-plaintext highlighter-rouge">ifdown</code> Commands</h2>
+
+<p>Although the <code class="language-plaintext highlighter-rouge">ifup</code> and <code class="language-plaintext highlighter-rouge">ifdown</code> commands are deprecated in favor of the <code class="language-plaintext highlighter-rouge">ip</code> command, they are still widely used in Ubuntu. These commands require superuser privileges.</p>
+
+<h3 id="start-an-interface-1">Start an Interface</h3>
+
+<p>To bring up or start an interface, use the <code class="language-plaintext highlighter-rouge">ifup</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>ifup eth0
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">eth0</code> with the name of your interface.</p>
+
+<h3 id="stop-an-interface-1">Stop an Interface</h3>
+
+<p>To bring down or stop an interface, use the <code class="language-plaintext highlighter-rouge">ifdown</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>ifdown eth0
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">eth0</code> with the name of your interface.</p>
+
+<h2 id="the-systemctl-command">The <code class="language-plaintext highlighter-rouge">systemctl</code> Command</h2>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">systemctl</code> command to start or stop the NetworkManager service itself. This is a more drastic step and will affect all network connections on your system.</p>
+
+<h3 id="start-networkmanager">Start NetworkManager</h3>
+
+<p>To start the NetworkManager service, use the <code class="language-plaintext highlighter-rouge">systemctl start</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start NetworkManager
+</code></pre></div></div>
+
+<h3 id="stop-networkmanager">Stop NetworkManager</h3>
+
+<p>To stop the NetworkManager service, use the <code class="language-plaintext highlighter-rouge">systemctl stop</code> command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl stop NetworkManager
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Knowing how to manage network interfaces is an essential skill for anyone working with Ubuntu or any other Linux distribution. Whether you prefer to use the <code class="language-plaintext highlighter-rouge">ip</code>, <code class="language-plaintext highlighter-rouge">nmcli</code>, <code class="language-plaintext highlighter-rouge">ifup</code>/<code class="language-plaintext highlighter-rouge">ifdown</code>, or <code class="language-plaintext highlighter-rouge">systemctl</code> commands, it’s important to understand what each command does and how to use it properly. This knowledge will help you maintain a robust and stable network on your Ubuntu system.</p>]]></content><author><name>Lucian, medaey</name></author><category term="network" /><category term="wireless" /><summary type="html"><![CDATA[Managing network interfaces is a critical task in networking and system administration. Ubuntu, being one of the most popular Linux distributions, provides several command-line utilities for network interface management. This article will guide you on how to start, stop, or disconnect different interfaces in Ubuntu.]]></summary></entry><entry><title type="html">A Journey Through Linux: Evolution of Major Distributions and their Most Popular Commands</title><link href="http://localhost:4000/linux/2023/07/18/a-journey-through-linux-evolution-of-major-distributions-and-their-most-popular-commands.html" rel="alternate" type="text/html" title="A Journey Through Linux: Evolution of Major Distributions and their Most Popular Commands" /><published>2023-07-18T00:00:00+02:00</published><updated>2023-07-18T00:00:00+02:00</updated><id>http://localhost:4000/linux/2023/07/18/a-journey-through-linux-evolution-of-major-distributions-and-their-most-popular-commands</id><content type="html" xml:base="http://localhost:4000/linux/2023/07/18/a-journey-through-linux-evolution-of-major-distributions-and-their-most-popular-commands.html"><![CDATA[<h2 id="slackware-the-patriarch-of-linux-distributions-1993">Slackware: The Patriarch of Linux Distributions (1993)</h2>
+
+<p>Slackware, started by Patrick Volkerding, is known for its simplicity and the fact that it’s one of the most Unix-like Linux distributions out there. Its philosophy is all about stability, simplicity, and most importantly, the freedom to tweak the system to your heart’s content.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install a package</span>
+installpkg package_name.tgz
+
+<span class="c"># Remove a package</span>
+removepkg package_name
+
+<span class="c"># Upgrade a package</span>
+upgradepkg package_name.tgz
+</code></pre></div></div>
+
+<h2 id="debian-the-universal-operating-system-1993">Debian: The Universal Operating System (1993)</h2>
+
+<p>Debian, started by Ian Murdock, aims to be the universal operating system. Known for its robustness and richness in package quantity, Debian has spawned a lot of notable distributions such as Ubuntu and Linux Mint.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Update package list</span>
+<span class="nb">sudo </span>apt-get update
+
+<span class="c"># Upgrade packages</span>
+<span class="nb">sudo </span>apt-get upgrade
+
+<span class="c"># Install a package</span>
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>package_name
+
+<span class="c"># Remove a package</span>
+<span class="nb">sudo </span>apt-get remove package_name
+</code></pre></div></div>
+
+<h2 id="red-hat-linuxfedora-the-mother-of-enterprise-linux-1994">Red Hat Linux/Fedora: The Mother of Enterprise Linux (1994)</h2>
+
+<p>Red Hat Linux, which eventually branched into the Fedora project and Red Hat Enterprise Linux, is known for its commitment to stability and security. It’s a go-to for enterprises and supports a wide array of architectures.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Update package list</span>
+<span class="nb">sudo </span>dnf check-update
+
+<span class="c"># Upgrade packages</span>
+<span class="nb">sudo </span>dnf upgrade
+
+<span class="c"># Install a package</span>
+<span class="nb">sudo </span>dnf <span class="nb">install </span>package_name
+
+<span class="c"># Remove a package</span>
+<span class="nb">sudo </span>dnf remove package_name
+</code></pre></div></div>
+
+<h2 id="suseopensuse-the-chameleon-in-the-world-of-linux-1994">SUSE/openSUSE: The Chameleon in the World of Linux (1994)</h2>
+
+<p>SUSE (and its community counterpart openSUSE) is known for its YaST control center, which makes system configuration a breeze. The distribution has strong support for enterprise applications.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Refresh repositories</span>
+<span class="nb">sudo </span>zypper refresh
+
+<span class="c"># Upgrade packages</span>
+<span class="nb">sudo </span>zypper up
+
+<span class="c"># Install a package</span>
+<span class="nb">sudo </span>zypper <span class="k">in </span>package_name
+
+<span class="c"># Remove a package</span>
+<span class="nb">sudo </span>zypper <span class="nb">rm </span>package_name
+</code></pre></div></div>
+
+<h2 id="ubuntu-linux-for-human-beings-2004">Ubuntu: Linux for Human Beings (2004)</h2>
+
+<p>Ubuntu, derived from Debian, is one of the most popular Linux distributions out there. Its ease of use and strong community support make it a great choice for new Linux users. It’s the basis for many other distributions like Linux Mint, elementary OS, and Pop!_OS.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Update package list</span>
+<span class="nb">sudo </span>apt update
+
+<span class="c"># Upgrade packages</span>
+<span class="nb">sudo </span>apt upgrade
+
+<span class="c"># Install a package</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>package_name
+
+<span class="c"># Remove a package</span>
+<span class="nb">sudo </span>apt remove package_name
+</code></pre></div></div>
+
+<h2 id="arch-linux-keep-it-simple-stupid-2002">Arch Linux: Keep It Simple, Stupid! (2002)</h2>
+
+<p>Arch Linux follows a rolling-release model and operates on a KISS (Keep It Simple, Stupid) principle. With its detailed documentation and flexibility, Arch Linux is a great distribution for those who want to build their system from the ground up.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Synchronize and update packages</span>
+<span class="nb">sudo </span>pacman <span class="nt">-Syu</span>
+
+<span class="c"># Install a package</span>
+<span class="nb">sudo </span>pacman <span class="nt">-S</span> package_name
+
+<span class="c"># Remove a package</span>
+<span class="nb">sudo </span>pacman <span class="nt">-R</span> package_name
+</code></pre></div></div>
+
+<h2 id="linux-mint-from-freedom-came-elegance-2006">Linux Mint: From Freedom Came Elegance (2006)</h2>
+
+<p>Linux Mint is a user-friendly distribution based on Ubuntu. It includes a lot of “out of the box” features that other distributions might lack, making it a popular choice for both Linux beginners and experienced users.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Update package list</span>
+<span class="nb">sudo </span>apt update
+
+<span class="c"># Upgrade packages</span>
+<span class="nb">sudo </span>apt upgrade
+
+<span class="c"># Install a package</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>package_name
+
+<span class="c"># Remove a package</span>
+<span class="nb">sudo </span>apt remove package_name
+</code></pre></div></div>
+
+<p>These distributions and their most used commands are just the tip of the iceberg when it comes to Linux. The Linux ecosystem is vast, and every distribution brings something unique to the table. With a wealth of options available, it’s all about finding the one that suits your needs the most. Happy exploring!</p>]]></content><author><name>Lucian, medaey</name></author><category term="linux" /><category term="slackware" /><category term="debian" /><category term="rhel" /><category term="arch" /><summary type="html"><![CDATA[Slackware: The Patriarch of Linux Distributions (1993)]]></summary></entry><entry><title type="html">Introduction to AS400: Setting Up and Basic Commands</title><link href="http://localhost:4000/as400/2023/07/18/introduction-to-as400-setting-up-and-basic-commands.html" rel="alternate" type="text/html" title="Introduction to AS400: Setting Up and Basic Commands" /><published>2023-07-18T00:00:00+02:00</published><updated>2023-07-18T00:00:00+02:00</updated><id>http://localhost:4000/as400/2023/07/18/introduction-to-as400-setting-up-and-basic-commands</id><content type="html" xml:base="http://localhost:4000/as400/2023/07/18/introduction-to-as400-setting-up-and-basic-commands.html"><![CDATA[<p>The AS400, now known as IBM i, is a mid-range computer system developed by IBM. It is known for its reliability, security, and scalability, making it a popular choice for businesses that require a robust and stable platform. In this article, we will explore how to set up an AS400 environment and learn some basic commands to get you started.</p>
+
+<h2 id="setting-up-as400">Setting up AS400</h2>
+
+<p>Setting up an AS400 environment involves several steps. Here’s a general outline of the process:</p>
+
+<ol>
+  <li>
+    <p><strong>Hardware</strong>: Acquire an AS400 server or an IBM i-compatible machine. Ensure that it meets the necessary hardware requirements for your workload.</p>
+  </li>
+  <li>
+    <p><strong>Operating System</strong>: Install the IBM i operating system on the AS400 machine. This can be done using the IBM i installation media or by using virtualization software such as IBM PowerVM.</p>
+  </li>
+  <li>
+    <p><strong>Networking</strong>: Configure the network settings for your AS400. This includes assigning IP addresses, setting up DNS, and configuring network interfaces.</p>
+  </li>
+  <li>
+    <p><strong>Security</strong>: Establish proper security measures for your AS400 environment. This may involve setting up user accounts, configuring access controls, and enabling security features such as SSL/TLS.</p>
+  </li>
+  <li>
+    <p><strong>Software Installation</strong>: Install additional software and applications on your AS400 system as per your requirements. IBM i supports a wide range of applications, including ERP systems, databases, and development tools.</p>
+  </li>
+</ol>
+
+<p>Once your AS400 environment is set up, you can start using it by accessing the command line interface.</p>
+
+<h2 id="basic-as400-commands">Basic AS400 Commands</h2>
+
+<p>The command line interface in AS400, commonly referred to as the “green screen,” provides a powerful way to interact with the system. Here are some basic commands to help you get started:</p>
+
+<ol>
+  <li><strong>WRKSYSSTS</strong>: This command displays the system status, including CPU usage, memory utilization, and active jobs. It provides a snapshot of the overall system health.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WRKSYSSTS
+</code></pre></div></div>
+
+<ol>
+  <li><strong>WRKACTJOB</strong>: Use this command to view the active jobs on the system. It displays information such as job name, user, CPU usage, and status.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WRKACTJOB
+</code></pre></div></div>
+
+<ol>
+  <li><strong>DSPJOBLOG</strong>: This command allows you to view the job log for a specific job or the entire system. The job log contains information about job-related events, messages, and errors.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DSPJOBLOG JOB(jobname)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>WRKOBJ</strong>: Use this command to work with objects on the system, such as libraries, files, or programs. It provides options to create, delete, or modify objects.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WRKOBJ OBJ(libraryname/objectname) OBJTYPE(*ALL)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>CRTLIB</strong>: This command creates a new library on the system. Libraries are used to organize objects and provide a logical grouping.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CRTLIB LIB(libraryname)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>CHGLIB</strong>: Use this command to modify the attributes of an existing library, such as the text description or the library’s authority.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHGLIB LIB(libraryname) TEXT('New description')
+</code></pre></div></div>
+
+<ol>
+  <li><strong>DSPLIB</strong>: This command displays information about a specific library, including its objects, size, and attributes.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DSPLIB LIB(libraryname)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>WRKUSRJOB</strong>: This command displays information about user jobs. It provides details such as job name, user, job status, CPU usage, and memory utilization.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WRKUSRJOB USER(username)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>WRKSPLF</strong>: Use this command to work with spooled files. Spooled files are used to store printer output or other generated reports. This command allows you to view, hold, release, or delete spooled files.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WRKSPLF
+</code></pre></div></div>
+
+<ol>
+  <li><strong>WRKJOBSCDE</strong>: This command displays information about jobs scheduled to run at specific times. It provides details such as job name, schedule time, job status, and command to be executed.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WRKJOBSCDE
+</code></pre></div></div>
+
+<ol>
+  <li><strong>GO CMD</strong>: This command allows you to navigate to a specific command on the system. It opens a menu that lists different commands, and you can choose the desired command to execute.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GO CMD
+</code></pre></div></div>
+
+<ol>
+  <li><strong>CHGJOB</strong>: Use this command to change the attributes of a specific job, such as the job priority, job queue, or time slice.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CHGJOB JOB(jobname) PRTTXT('New priority')
+</code></pre></div></div>
+
+<ol>
+  <li><strong>CPYTOIMPF</strong>: This command copies data from a physical file to an IFS (Integrated File System) file. It is useful for exporting data in a format that can be easily accessed by other applications.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CPYTOIMPF FROMFILE(libraryname/filename) TOSTMF('/path/to/output.csv') MBROPT(*REPLACE) STMFCODPAG(*PCASCII)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>DSPF</strong>: This command displays the contents of a physical file. It allows you to view and navigate through the records of the file.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DSPF FILE(libraryname/filename)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>WRKCFGSTS</strong>: Use this command to display the configuration status of various system components, such as network interfaces, disk units, or tape drives.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WRKCFGSTS CFGTYPE(*DEV) CFGD(DEVICENAME)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>SAVSYS</strong>: This command initiates a system save, which creates a backup of the entire system. It is used for disaster recovery and system migration purposes.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SAVSYS DEV(TAP01) ENDOPT(*LEAVE)
+</code></pre></div></div>
+
+<ol>
+  <li><strong>DSPMSGD</strong>: This command displays detailed information about a specific message ID. It provides the message text, severity level, and possible causes or actions.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DSPMSGD MSGID(messageid)
+</code></pre></div></div>
+
+<p>These are just a few examples of the basic commands available in AS400. The system offers a wide range of commands to manage objects, jobs, printers, and more. You can explore the AS400 documentation for a comprehensive list of commands and their usages.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>AS400, now known as IBM i, is a powerful and reliable computer system that has been widely adopted by businesses. In this article, we discussed the process of setting up an AS400 environment and explored some basic commands to get you started. As you become more familiar with the platform, you’ll discover its rich features and capabilities, allowing you to leverage its strength in managing and running critical business applications.</p>]]></content><author><name>Lucian, medaey</name></author><category term="AS400" /><category term="terminal" /><summary type="html"><![CDATA[The AS400, now known as IBM i, is a mid-range computer system developed by IBM. It is known for its reliability, security, and scalability, making it a popular choice for businesses that require a robust and stable platform. In this article, we will explore how to set up an AS400 environment and learn some basic commands to get you started.]]></summary></entry><entry><title type="html">Mastering Git: A Comprehensive Guide for Beginners and Experts</title><link href="http://localhost:4000/git/2023/07/18/mastering-git-a-comprehensive-guide-for-beginners-and-experts.html" rel="alternate" type="text/html" title="Mastering Git: A Comprehensive Guide for Beginners and Experts" /><published>2023-07-18T00:00:00+02:00</published><updated>2023-07-18T00:00:00+02:00</updated><id>http://localhost:4000/git/2023/07/18/mastering-git-a-comprehensive-guide-for-beginners-and-experts</id><content type="html" xml:base="http://localhost:4000/git/2023/07/18/mastering-git-a-comprehensive-guide-for-beginners-and-experts.html"><![CDATA[<p>Git, the free and open-source distributed version control system, is at the heart of countless software projects — both large and small. Its functionality and flexibility allow developers to track changes, collaborate seamlessly, and manage complex projects with ease. This guide will provide a comprehensive overview of Git, from basic commands that every beginner should know to advanced features that can boost the productivity of even seasoned experts.</p>
+
+<h2 id="getting-started">Getting Started</h2>
+
+<p>First things first, you need to install Git. Most Linux distributions include Git in their standard repositories. To install Git on a Debian-based system like Ubuntu, use:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>git
+</code></pre></div></div>
+
+<p>For Fedora, CentOS, or RHEL:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>dnf <span class="nb">install </span>git
+</code></pre></div></div>
+
+<h2 id="basic-git-commands">Basic Git Commands</h2>
+
+<p>Every journey starts with the first step. Here are some of the most common commands you need to get started with Git.</p>
+
+<h3 id="1-git-init">1. git init</h3>
+
+<p>This command initializes a new Git repository in the current directory.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git init
+</code></pre></div></div>
+
+<h3 id="2-git-clone">2. git clone</h3>
+
+<p>To work with a repository that already exists, you can clone it to your local machine. Replace <code class="language-plaintext highlighter-rouge">URL</code> with the URL of the remote repository.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone URL
+</code></pre></div></div>
+
+<h3 id="3-git-add">3. git add</h3>
+
+<p>This command adds files from your working directory to your staging area.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add filename    <span class="c"># adds a specific file</span>
+git add <span class="nb">.</span>           <span class="c"># adds all files in the current directory</span>
+</code></pre></div></div>
+
+<h3 id="4-git-commit">4. git commit</h3>
+
+<p>To save your changes, you need to commit them. This command saves your changes to the local repository.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit <span class="nt">-m</span> <span class="s2">"commit message"</span>
+</code></pre></div></div>
+
+<h3 id="5-git-push">5. git push</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">git push</code> command sends your committed changes to a remote repository.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push origin master    <span class="c"># pushes changes to the master branch of the remote repository named "origin"</span>
+</code></pre></div></div>
+
+<h3 id="6-git-pull">6. git pull</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">git pull</code> command fetches changes from a remote repository and merges them into your current branch.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull origin master    <span class="c"># pulls changes from the master branch of the remote repository named "origin"</span>
+</code></pre></div></div>
+
+<h2 id="intermediate-git-commands">Intermediate Git Commands</h2>
+
+<p>Once you’ve mastered the basics, you can use these intermediate commands to manage your repositories more effectively.</p>
+
+<h3 id="1-git-branch">1. git branch</h3>
+
+<p>This command lists all the branches in your repository, and highlights the one you’re currently on.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git branch
+</code></pre></div></div>
+
+<p>You can also create a new branch using the same command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git branch new-branch-name
+</code></pre></div></div>
+
+<h3 id="2-git-checkout">2. git checkout</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">git checkout</code> command allows you to switch between different branches and files in your Git repository.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout branch-name    <span class="c"># switch to an existing branch</span>
+</code></pre></div></div>
+
+<p>You can create a new branch and switch to it using the <code class="language-plaintext highlighter-rouge">-b</code> option.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout <span class="nt">-b</span> new-branch-name
+</code></pre></div></div>
+
+<h3 id="3-git-merge">3. git merge</h3>
+
+<p>To combine the changes made in one branch with another, use the <code class="language-plaintext highlighter-rouge">git merge</code> command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git merge branch-name
+</code></pre></div></div>
+
+<h3 id="4-git-diff">4. git diff</h3>
+
+<p>This command displays conflicts between branches. Before a merge, you can preview the changes that will be made.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff source-branch target-branch
+</code></pre></div></div>
+
+<h3 id="5-git-stash">5. git stash</h3>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">git stash</code> command to temporarily save changes that you don’t want to commit immediately.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git stash
+</code></pre></div></div>
+
+<p>You can apply the stashed changes later using <code class="language-plaintext highlighter-rouge">git stash apply</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git stash apply
+</code></pre></div></div>
+
+<h2 id="advanced-git-commands">Advanced Git Commands</h2>
+
+<p>For those well-versed in the basics of Git, here are some advanced commands to boost your productivity.</p>
+
+<h3 id="1-git-rebase">1. git rebase</h3>
+
+<p>Rebasing is the process of moving or combining a sequence of commits to a new base commit. It’s an alternative to merge.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git rebase branch-name
+</code></pre></div></div>
+
+<h3 id="2-git-bisect">2. git bisect</h3>
+
+<p>Bisect helps in finding the commit that introduced a bug by using binary search.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git bisect start
+git bisect bad                 <span class="c"># Current version is bad</span>
+git bisect good version-number <span class="c"># This is the last 'good' commit</span>
+</code></pre></div></div>
+
+<h3 id="3-git-cherry-pick">3. git cherry-pick</h3>
+
+<p>This command applies the changes introduced by some existing commits.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git cherry-pick commit-hash
+</code></pre></div></div>
+
+<h3 id="4-git-reflog">4. git reflog</h3>
+
+<p>Reflog stands for reference logs. This command will show you when the tips of branches and other references were updated in the local repository.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git reflog
+</code></pre></div></div>
+
+<h3 id="5-git-revert">5. git revert</h3>
+
+<p>This command creates a new commit that undoes the changes made in a previous commit.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git revert commit-hash
+</code></pre></div></div>
+
+<p>Mastering Git is a journey of continuous learning and exploration. The commands discussed in this guide form the foundation of this journey. As you gain proficiency, you’ll realize that Git is more than just a version control system—it’s a powerful tool to streamline your software development process. Keep experimenting, keep exploring, and let Git and its myriad features guide you on your path to becoming a Git Guru.</p>]]></content><author><name>Lucian, medaey</name></author><category term="git" /><category term="linux" /><category term="bash" /><category term="terminal" /><summary type="html"><![CDATA[Git, the free and open-source distributed version control system, is at the heart of countless software projects — both large and small. Its functionality and flexibility allow developers to track changes, collaborate seamlessly, and manage complex projects with ease. This guide will provide a comprehensive overview of Git, from basic commands that every beginner should know to advanced features that can boost the productivity of even seasoned experts.]]></summary></entry><entry><title type="html">Rectifying a Bad Commit in Git: A Step-by-Step Guide</title><link href="http://localhost:4000/git/2023/07/18/rectifying-a-bad-commit-in-git-a-step-by-step-guide.html" rel="alternate" type="text/html" title="Rectifying a Bad Commit in Git: A Step-by-Step Guide" /><published>2023-07-18T00:00:00+02:00</published><updated>2023-07-18T00:00:00+02:00</updated><id>http://localhost:4000/git/2023/07/18/rectifying-a-bad-commit-in-git-a-step-by-step-guide</id><content type="html" xml:base="http://localhost:4000/git/2023/07/18/rectifying-a-bad-commit-in-git-a-step-by-step-guide.html"><![CDATA[<p>Git is an incredibly powerful tool for managing and collaborating on projects of any size. But with great power comes great responsibility, and sometimes mistakes are made. Don’t worry! Git provides several ways to fix a bad commit. In this article, we’ll explore how to rectify a bad commit step by step.</p>
+
+<h2 id="step-1-identify-the-bad-commit">Step 1: Identify the Bad Commit</h2>
+
+<p>The first step is to identify the commit that you want to correct. Git keeps a record of all the commits you’ve made in your repository. You can view this history using the <code class="language-plaintext highlighter-rouge">git log</code> command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log
+</code></pre></div></div>
+
+<p>This command will show you a list of all your previous commits in reverse chronological order. Each commit is represented by a unique SHA-1 hash, followed by the commit message, the author, and the date and time of the commit. Identify the hash of the commit that you want to correct.</p>
+
+<h2 id="step-2-choose-the-correct-method">Step 2: Choose the Correct Method</h2>
+
+<p>Depending on the state of your project and the nature of the mistake, there are different methods you might want to use to rectify a bad commit:</p>
+
+<ul>
+  <li>
+    <p><strong>git commit –amend</strong>: If the bad commit was the most recent one and you haven’t pushed your changes to a remote repository yet, you can use <code class="language-plaintext highlighter-rouge">git commit --amend</code> to easily modify it.</p>
+  </li>
+  <li>
+    <p><strong>git revert</strong>: If you want to undo the changes introduced by a commit, but keep the history of all the changes made, use <code class="language-plaintext highlighter-rouge">git revert</code>.</p>
+  </li>
+  <li>
+    <p><strong>git reset</strong>: If you need to completely remove a commit from your history, use <code class="language-plaintext highlighter-rouge">git reset</code>.</p>
+  </li>
+</ul>
+
+<h2 id="step-3-apply-the-correct-method">Step 3: Apply the Correct Method</h2>
+
+<h3 id="amend-the-most-recent-commit">Amend the Most Recent Commit</h3>
+
+<p>To amend the most recent commit, you can simply make the necessary changes to your files, stage them with <code class="language-plaintext highlighter-rouge">git add</code>, and then run <code class="language-plaintext highlighter-rouge">git commit --amend</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit <span class="nt">--amend</span> <span class="nt">-m</span> <span class="s2">"New and correct commit message"</span>
+</code></pre></div></div>
+
+<h3 id="revert-a-commit">Revert a Commit</h3>
+
+<p>To revert a commit, simply use the <code class="language-plaintext highlighter-rouge">git revert</code> command followed by the hash of the bad commit:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git revert commit-hash
+</code></pre></div></div>
+
+<p>This command will create a new commit that undoes the changes made in the bad commit, while preserving the history of your project.</p>
+
+<h3 id="reset-a-commit">Reset a Commit</h3>
+
+<p>If you want to completely remove a commit from your history, you can use the <code class="language-plaintext highlighter-rouge">git reset</code> command. The <code class="language-plaintext highlighter-rouge">--hard</code> option will delete the commit and all the changes introduced by it:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git reset <span class="nt">--hard</span> commit-hash^
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">commit-hash</code> with the hash of the commit you want to remove. The <code class="language-plaintext highlighter-rouge">^</code> character refers to the parent of the specified commit, which will be the new HEAD after the command is executed.</p>
+
+<h2 id="step-4-push-your-changes-to-the-remote-repository">Step 4: Push Your Changes to the Remote Repository</h2>
+
+<p>Once you’ve rectified the bad commit locally, you’ll want to update the remote repository.</p>
+
+<p>If you used <code class="language-plaintext highlighter-rouge">git commit --amend</code> or <code class="language-plaintext highlighter-rouge">git reset</code>, and if you had previously pushed the bad commit to the remote repository, you’ll have to force push your new commit:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push origin branch-name <span class="nt">--force</span>
+</code></pre></div></div>
+
+<p>Be careful with <code class="language-plaintext highlighter-rouge">git push --force</code>, as it can overwrite changes in the remote repository. Use it sparingly and only when you’re sure it’s necessary.</p>
+
+<p>If you used <code class="language-plaintext highlighter-rouge">git revert</code>, a simple <code class="language-plaintext highlighter-rouge">git push</code> will suffice:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push origin branch-name
+</code></pre></div></div>
+
+<p>Rectifying a bad commit may seem like a daunting task, but with the right tools and commands, it can be done quickly and efficiently. Mistakes are a part of any development process, and Git provides robust tools to correct them when they occur. Happy coding!</p>]]></content><author><name>Lucian, medaey</name></author><category term="git" /><summary type="html"><![CDATA[Git is an incredibly powerful tool for managing and collaborating on projects of any size. But with great power comes great responsibility, and sometimes mistakes are made. Don’t worry! Git provides several ways to fix a bad commit. In this article, we’ll explore how to rectify a bad commit step by step.]]></summary></entry><entry><title type="html">The Expert Guide to iptables: Mastering Network Firewall Configuration</title><link href="http://localhost:4000/network/2023/07/18/the-expert-guide-to-iptables-mastering-network-firewall-configuration.html" rel="alternate" type="text/html" title="The Expert Guide to iptables: Mastering Network Firewall Configuration" /><published>2023-07-18T00:00:00+02:00</published><updated>2023-07-18T00:00:00+02:00</updated><id>http://localhost:4000/network/2023/07/18/the-expert-guide-to-iptables-mastering-network-firewall-configuration</id><content type="html" xml:base="http://localhost:4000/network/2023/07/18/the-expert-guide-to-iptables-mastering-network-firewall-configuration.html"><![CDATA[<p>Firewalls play a critical role in securing computer networks by filtering incoming and outgoing network traffic. Among the many firewall options available, iptables stands out as a powerful and flexible choice for Linux-based systems. In this expert guide, we will delve into the intricacies of iptables and provide you with the knowledge to configure and manage a robust network firewall.</p>
+
+<h2 id="what-is-iptables">What is iptables?</h2>
+
+<p>iptables is a command-line utility in Linux that allows for the configuration of the netfilter firewall, which is built into the Linux kernel. It provides a powerful and flexible framework for filtering network traffic, controlling network connections, and performing network address translation (NAT). With iptables, you have fine-grained control over which packets are allowed or blocked based on various criteria such as source/destination IP addresses, port numbers, packet protocols, and more.</p>
+
+<h2 id="iptables-concepts-and-terminology">iptables Concepts and Terminology</h2>
+
+<p>Before diving into iptables configuration, it’s important to understand some key concepts and terminology:</p>
+
+<ul>
+  <li><strong>Chains</strong>: iptables uses chains to organize rules. A chain is a sequence of rules that packets traverse. There are three built-in chains: INPUT (for incoming packets), OUTPUT (for outgoing packets), and FORWARD (for packets being routed through the system).</li>
+  <li><strong>Tables</strong>: iptables uses tables to categorize different types of rules. The most commonly used tables are filter (for packet filtering), nat (for network address translation), and mangle (for specialized packet alteration).</li>
+  <li><strong>Rules</strong>: Rules are the heart of iptables. Each rule defines a condition and an action. When a packet matches the conditions specified in a rule, the associated action is taken, which can be accepting, dropping, or modifying the packet.</li>
+  <li><strong>Targets</strong>: Targets are the actions performed on packets that match a rule. Common targets include ACCEPT (allow the packet), DROP (discard the packet), REJECT (discard the packet and send an error message back), and LOG (log information about the packet).</li>
+  <li><strong>Matches</strong>: Matches are conditions that a packet must meet to be considered a match for a rule. Matches can be based on source/destination IP addresses, port numbers, packet protocols, and other packet attributes.</li>
+</ul>
+
+<h2 id="iptables-configuration">iptables Configuration</h2>
+
+<p>To configure iptables, you need to define rules that match specific packets and specify the action to be taken for those packets. Here’s a step-by-step process to get started with iptables configuration:</p>
+
+<ol>
+  <li>
+    <p><strong>Understanding Default Policies</strong>: Before adding rules, determine the default policies for each chain. Default policies define what happens to packets that do not match any rules. You can set default policies to ACCEPT, DROP, or REJECT.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> iptables <span class="nt">-P</span> INPUT DROP
+ iptables <span class="nt">-P</span> OUTPUT ACCEPT
+ iptables <span class="nt">-P</span> FORWARD DROP
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Creating and Modifying Rules</strong>: Use the iptables command to create and modify rules. Start with simple rules and gradually build a comprehensive set of rules to meet your specific network security requirements. Remember to consider both inbound and outbound traffic.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> iptables <span class="nt">-A</span> INPUT <span class="nt">-p</span> tcp <span class="nt">--dport</span> 22 <span class="nt">-j</span> ACCEPT
+ iptables <span class="nt">-A</span> INPUT <span class="nt">-s</span> 192.168.0.0/24 <span class="nt">-j</span> DROP
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Defining Match Criteria</strong>: Specify the match criteria for each rule using options such as <code class="language-plaintext highlighter-rouge">-s</code> (source address), <code class="language-plaintext highlighter-rouge">-d</code> (destination address), <code class="language-plaintext highlighter-rouge">-p</code> (protocol), <code class="language-plaintext highlighter-rouge">-i</code> (input interface), <code class="language-plaintext highlighter-rouge">-o</code> (output interface), and more. Combine multiple match criteria to create complex rules.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> iptables <span class="nt">-A</span> INPUT <span class="nt">-s</span> 192.168.0.0/24 <span class="nt">-p</span> tcp <span class="nt">--dport</span> 80 <span class="nt">-j</span> ACCEPT
+ iptables <span class="nt">-A</span> INPUT <span class="nt">-i</span> eth0 <span class="nt">-p</span> udp <span class="nt">--dport</span> 53 <span class="nt">-j</span> ACCEPT
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Setting the Action</strong>: Set the action for each rule using options such as <code class="language-plaintext highlighter-rouge">-j</code> (jump to a target), <code class="language-plaintext highlighter-rouge">-p</code> (protocol-specific options), <code class="language-plaintext highlighter-rouge">-m</code> (extension modules), and more. Choose an appropriate target based on your desired firewall behavior.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> iptables <span class="nt">-A</span> INPUT <span class="nt">-p</span> tcp <span class="nt">--dport</span> 22 <span class="nt">-j</span> ACCEPT
+ iptables <span class="nt">-A</span> INPUT <span class="nt">-p</span> icmp <span class="nt">-j</span> DROP
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Testing and Saving Rules</strong>: After defining rules, test them to ensure they function as expected. You can use tools like <code class="language-plaintext highlighter-rouge">ping</code>, <code class="language-plaintext highlighter-rouge">curl</code>, or <code class="language-plaintext highlighter-rouge">telnet</code> to simulate different network scenarios. Once satisfied, save your iptables configuration so that it persists across reboots.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> iptables-save <span class="o">&gt;</span> /etc/iptables/rules.v4
+ iptables-save <span class="o">&gt;</span> /etc/iptables/rules.v6
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Managing Rule Order</strong>: Rule order matters in iptables. Rules are processed in a sequential manner, and the first matching rule determines the action taken on a packet. Pay attention to rule order and use the <code class="language-plaintext highlighter-rouge">iptables -L --line-numbers</code> command to view and modify rule positions.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> iptables <span class="nt">-L</span> <span class="nt">--line-numbers</span>
+ iptables <span class="nt">-D</span> INPUT 3
+ iptables <span class="nt">-I</span> INPUT 3 <span class="nt">-p</span> tcp <span class="nt">--dport</span> 443 <span class="nt">-j</span> ACCEPT
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="advanced-iptables-features">Advanced iptables Features</h2>
+
+<p>iptables offers a wide range of advanced features to enhance your network firewall configuration. Here are a few notable features to explore:</p>
+
+<ul>
+  <li>
+    <p><strong>Network Address Translation (NAT)</strong>: iptables provides NAT capabilities for masquerading, port forwarding, and load balancing. These features are particularly useful for setting up network services and managing network traffic.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  iptables <span class="nt">-t</span> nat <span class="nt">-A</span> POSTROUTING <span class="nt">-o</span> eth0 <span class="nt">-j</span> MASQUERADE
+  iptables <span class="nt">-t</span> nat <span class="nt">-A</span> PREROUTING <span class="nt">-i</span> eth0 <span class="nt">-p</span> tcp <span class="nt">--dport</span> 80 <span class="nt">-j</span> DNAT <span class="nt">--to-destination</span> 192.168.0.10:80
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Connection Tracking</strong>: iptables can track the state of network connections and apply rules based on the connection’s state. This allows for the creation of more dynamic and sophisticated firewall configurations.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  iptables <span class="nt">-A</span> INPUT <span class="nt">-m</span> conntrack <span class="nt">--ctstate</span> ESTABLISHED,RELATED <span class="nt">-j</span> ACCEPT
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Packet Filtering Extensions</strong>: iptables supports extensions like <code class="language-plaintext highlighter-rouge">conntrack</code>, <code class="language-plaintext highlighter-rouge">limit</code>, <code class="language-plaintext highlighter-rouge">recent</code>, and <code class="language-plaintext highlighter-rouge">hashlimit</code> to add additional filtering capabilities. These extensions enable more granular control over packet filtering and traffic management.</p>
+
+    <p>Example:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  iptables <span class="nt">-A</span> INPUT <span class="nt">-p</span> tcp <span class="nt">--dport</span> 22 <span class="nt">-m</span> conntrack <span class="nt">--ctstate</span> NEW <span class="nt">-m</span> recent <span class="nt">--name</span> SSH <span class="nt">--set</span>
+  iptables <span class="nt">-A</span> INPUT <span class="nt">-p</span> tcp <span class="nt">--dport</span> 22 <span class="nt">-m</span> conntrack <span class="nt">--ctstate</span> NEW <span class="nt">-m</span> recent <span class="nt">--name</span> SSH <span class="nt">--rcheck</span> <span class="nt">--seconds</span> 60 <span class="nt">--hitcount</span> 4 <span class="nt">-j</span> DROP
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p><strong>iptables -L</strong>: List all the current firewall rules.</p>
+  </li>
+  <li>
+    <p><strong>iptables -F</strong>: Flush (delete) all the rules from all chains.</p>
+  </li>
+  <li>
+    <p><strong>iptables -A CHAIN -p PROTOCOL –dport PORT -j ACCEPT</strong>: Allow incoming traffic to a specific port and protocol.</p>
+  </li>
+  <li>
+    <p><strong>iptables -A CHAIN -s SOURCE_IP_ADDRESS -j DROP</strong>: Block incoming traffic from a specific IP address.</p>
+  </li>
+  <li>
+    <p><strong>iptables -A CHAIN -m conntrack –ctstate ESTABLISHED,RELATED -j ACCEPT</strong>: Allow incoming traffic that is related to an established connection.</p>
+  </li>
+  <li>
+    <p><strong>iptables -A CHAIN -p tcp –dport PORT -m limit –limit BURST/HOUR -j ACCEPT</strong>: Limit incoming traffic to a specific port using a burst and hourly rate limit.</p>
+  </li>
+  <li>
+    <p><strong>iptables -A CHAIN -p tcp –syn -m connlimit –connlimit-above LIMIT -j REJECT</strong>: Reject incoming TCP traffic if the number of concurrent connections exceeds a limit.</p>
+  </li>
+  <li>
+    <p><strong>iptables -A CHAIN -p PROTOCOL -m recent –update –seconds SECONDS –name LISTNAME -j DROP</strong>: Block incoming traffic from an IP address if it has made recent connections within a specified time.</p>
+  </li>
+  <li>
+    <p><strong>iptables -t nat -A PREROUTING -p PROTOCOL –dport PORT -j DNAT –to-destination DESTINATION_IP:DESTINATION_PORT</strong>: Perform destination NAT (DNAT) to redirect incoming traffic to a different IP address and port.</p>
+  </li>
+  <li>
+    <p><strong>iptables -t nat -A POSTROUTING -s SOURCE_NETWORK -j SNAT –to-source DESTINATION_IP</strong>: Perform source NAT (SNAT) to change the source IP address of outgoing traffic from a specific network.</p>
+  </li>
+</ol>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>iptables is a powerful tool for configuring and managing network firewalls in Linux-based systems. By understanding iptables concepts, terminology, and configuration options, you can build a robust firewall that protects your network and ensures secure communication. With advanced features like NAT, connection tracking, and packet filtering extensions, iptables offers immense flexibility for customizing your firewall configuration.</p>
+
+<p>Remember to thoroughly test and validate your iptables rules before deploying them in a production environment. Additionally, consult the iptables documentation and online resources to further explore the capabilities of this versatile firewall tool.</p>
+
+<p>Mastering iptables empowers you with the knowledge and skills to safeguard your network and maintain control over your network traffic. Start exploring the possibilities of iptables today and take your network security to the next level!</p>]]></content><author><name>Lucian, medaey</name></author><category term="network" /><category term="monitoring" /><category term="linux" /><summary type="html"><![CDATA[Firewalls play a critical role in securing computer networks by filtering incoming and outgoing network traffic. Among the many firewall options available, iptables stands out as a powerful and flexible choice for Linux-based systems. In this expert guide, we will delve into the intricacies of iptables and provide you with the knowledge to configure and manage a robust network firewall.]]></summary></entry><entry><title type="html">The First Raspberry Pi: A Tiny Revolution in Computing</title><link href="http://localhost:4000/raspberry/2023/07/18/the-first-raspberry-pi-a-tiny-revolution-in-computing.html" rel="alternate" type="text/html" title="The First Raspberry Pi: A Tiny Revolution in Computing" /><published>2023-07-18T00:00:00+02:00</published><updated>2023-07-18T00:00:00+02:00</updated><id>http://localhost:4000/raspberry/2023/07/18/the-first-raspberry-pi-a-tiny-revolution-in-computing</id><content type="html" xml:base="http://localhost:4000/raspberry/2023/07/18/the-first-raspberry-pi-a-tiny-revolution-in-computing.html"><![CDATA[<p>Back in February 2012, a credit card-sized piece of technology shook up the world of computing. The Raspberry Pi, a small, low-cost and highly adaptable computer, was launched with the intention of promoting computer science education in schools. Its ease of use, flexibility, and low price point made it a hit, not just among students and educators, but also among hobbyists, tech tinkerers, and professional engineers.</p>
+
+<p>The first model to be released was the Raspberry Pi 1 Model B. This compact computer was designed by the UK-based Raspberry Pi Foundation, a non-profit organization dedicated to improving computer education worldwide. Little did they know that this initial offering would spark a revolution in low-cost computing and inspire countless creative technological projects.</p>
+
+<h2 id="raspberry-pi-1-model-b-specifications">Raspberry Pi 1 Model B: Specifications</h2>
+
+<p>The Raspberry Pi 1 Model B was powered by a 700MHz ARM11 processor and was equipped with 256MB of RAM. While these specifications might seem modest in comparison to contemporary standards, they were more than sufficient to run a range of tasks and even some lightweight operating systems like Raspbian, a Debian-based OS specially designed for the Raspberry Pi.</p>
+
+<p>The Model B featured two USB ports for peripherals like a mouse and a keyboard, an Ethernet port for internet connectivity, an SD card slot for storage, and a HDMI port to connect it to a monitor or a TV. These features, combined with its low price of around $35, made it a remarkably accessible tool for computer science education.</p>
+
+<h2 id="impact-on-education-and-beyond">Impact on Education and Beyond</h2>
+
+<p>The Raspberry Pi Foundation’s primary aim was to make computing more accessible to students, to help them learn programming skills, and to understand the hardware aspects of computing devices. The Raspberry Pi 1 Model B, with its low cost and flexibility, made this possible in ways that traditional computer science education did not.</p>
+
+<p>But the reach of the Raspberry Pi extended beyond the classroom. Its size and cost-effectiveness made it an attractive option for hobbyists and tinkerers. The Raspberry Pi could be used to power home automation projects, serve as a local media server, control robotic devices, and more. It wasn’t long before an active community of Raspberry Pi enthusiasts sprang up, sharing project ideas, troubleshooting tips, and software hacks.</p>
+
+<h2 id="the-legacy-of-the-raspberry-pi">The Legacy of the Raspberry Pi</h2>
+
+<p>In the years since the release of the Raspberry Pi 1 Model B, the Raspberry Pi Foundation has continued to refine and develop new models, each offering improved specifications and new features. Yet the original model set the blueprint for the future of Raspberry Pi: a focus on accessibility, versatility, and fostering a spirit of learning and creativity in computing.</p>
+
+<p>From its humble beginnings, the Raspberry Pi has grown to become a symbol of the democratization of technology. It has made computing more approachable and fun for people of all ages, all around the world. And all of this started with the first Raspberry Pi back in 2012, a tiny piece of tech that brought about a massive change in the world of computing.</p>]]></content><author><name>Lucian, medaey</name></author><category term="raspberry" /><category term="linux" /><summary type="html"><![CDATA[Back in February 2012, a credit card-sized piece of technology shook up the world of computing. The Raspberry Pi, a small, low-cost and highly adaptable computer, was launched with the intention of promoting computer science education in schools. Its ease of use, flexibility, and low price point made it a hit, not just among students and educators, but also among hobbyists, tech tinkerers, and professional engineers.]]></summary></entry><entry><title type="html">Decoding the Shells: sh, bash, zsh, ksh, and Beyond</title><link href="http://localhost:4000/linux/2023/07/15/decoding-the-shells-sh-bash-zsh-ksh-and-beyond.html" rel="alternate" type="text/html" title="Decoding the Shells: sh, bash, zsh, ksh, and Beyond" /><published>2023-07-15T20:30:01+02:00</published><updated>2023-07-15T20:30:01+02:00</updated><id>http://localhost:4000/linux/2023/07/15/decoding-the-shells-sh-bash-zsh-ksh-and-beyond</id><content type="html" xml:base="http://localhost:4000/linux/2023/07/15/decoding-the-shells-sh-bash-zsh-ksh-and-beyond.html"><![CDATA[<p>Shell environments are fundamental tools for any software engineer, devops practitioner or system administrator. They not only provide an interface to interact with the operating system but also offer a wide variety of in-built functionalities to make scripting and command-line navigation easier and more efficient.</p>
+
+<p>In this article, we will explore some of the most commonly used shell environments - <strong>sh (Bourne Shell)</strong>, <strong>bash (Bourne Again Shell)</strong>, <strong>zsh (Z Shell)</strong>, and <strong>ksh (Korn Shell)</strong>. We’ll delve into their origins, features, and understand why and where they are used.</p>
+
+<h2 id="bourne-shell-sh">Bourne Shell (sh)</h2>
+
+<p>Introduced in 1979 as part of Version 7 Unix, the Bourne Shell, also known as <code class="language-plaintext highlighter-rouge">sh</code>, was the original Unix shell written by Stephen Bourne at Bell Labs. The syntax and features of <code class="language-plaintext highlighter-rouge">sh</code> became widely adopted and formed the foundation for many of the scripting languages we see today.</p>
+
+<p>Its features included programming flow control, shell variables, and interactive command-line editing. However, it lacked certain features such as command-line editing and job control, which are commonly found in more modern shells.</p>
+
+<h2 id="bourne-again-shell-bash">Bourne Again Shell (bash)</h2>
+
+<p>Recognizing the limitations of <code class="language-plaintext highlighter-rouge">sh</code>, the Bourne Again SHell (bash) was developed as part of the GNU Project and was released in 1989. <code class="language-plaintext highlighter-rouge">bash</code> is essentially a superset of <code class="language-plaintext highlighter-rouge">sh</code>, meaning any script written for <code class="language-plaintext highlighter-rouge">sh</code> can be executed in <code class="language-plaintext highlighter-rouge">bash</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">bash</code> incorporated features from the C Shell (<code class="language-plaintext highlighter-rouge">csh</code>) and the Korn Shell (<code class="language-plaintext highlighter-rouge">ksh</code>), including command-line editing, job control, shell functions and aliases, indexed arrays of unlimited size, and integer arithmetic in any base from two to sixty-four.</p>
+
+<p>Due to its powerful features and the fact it comes as the default shell on many Unix systems, including Linux and macOS, <code class="language-plaintext highlighter-rouge">bash</code> is widely used and appreciated by developers around the world.</p>
+
+<h2 id="z-shell-zsh">Z Shell (zsh)</h2>
+
+<p>The Z Shell (<code class="language-plaintext highlighter-rouge">zsh</code>) was released in 1990 by Paul Falstad as an extended Bourne Shell with a large number of improvements, including some features of <code class="language-plaintext highlighter-rouge">bash</code>, <code class="language-plaintext highlighter-rouge">ksh</code>, and <code class="language-plaintext highlighter-rouge">tcsh</code>.</p>
+
+<p>Key features that <code class="language-plaintext highlighter-rouge">zsh</code> boasts include spelling correction, shared command history, extended file globbing, and a plethora of options for customizing its behavior. It also provides advanced scripting features, including associative arrays and anonymous functions.</p>
+
+<p>In recent years, <code class="language-plaintext highlighter-rouge">zsh</code> has seen a surge in popularity due to the Oh My Zsh user community, which provides a variety of powerful plugins, helpers, themes, and functions that make using the terminal a pleasant and customizable experience.</p>
+
+<h2 id="korn-shell-ksh">Korn Shell (ksh)</h2>
+
+<p>The Korn Shell (<code class="language-plaintext highlighter-rouge">ksh</code>) was developed by David Korn of Bell Labs in the mid-1980s and was aimed to provide a robust and efficient shell environment.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ksh</code> introduced many features that were later adopted by <code class="language-plaintext highlighter-rouge">bash</code> and <code class="language-plaintext highlighter-rouge">zsh</code>. These include command history, command-line editing, job control, shell functions and aliases, and array variables. <code class="language-plaintext highlighter-rouge">ksh</code> also boasts compatibility with <code class="language-plaintext highlighter-rouge">sh</code>, which makes it an easy transition for users familiar with the Bourne Shell.</p>
+
+<p>While <code class="language-plaintext highlighter-rouge">ksh</code> is not as widely adopted as <code class="language-plaintext highlighter-rouge">bash</code> or <code class="language-plaintext highlighter-rouge">zsh</code>, it is recognized for its performance and efficiency and is often the default shell in commercial Unix environments.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>While each shell has its strengths and quirks, the choice of shell often comes down to personal preference or the specific requirements of your environment. For those new to the Unix environment, <code class="language-plaintext highlighter-rouge">bash</code> provides a robust feature set and is the default on many systems. <code class="language-plaintext highlighter-rouge">zsh</code> offers extensive customization options and a rich user community. <code class="language-plaintext highlighter-rouge">ksh</code> is well-suited for performance-critical environments where efficiency is key.</p>
+
+<p>In any case, understanding the nuances of these shell environments can provide valuable insight into how to effectively interact with Unix-based systems and how to optimize your workflows based on the tools at hand.</p>]]></content><author><name>Lucian, medaey</name></author><category term="linux" /><category term="shells" /><category term="bash" /><category term="zsh" /><category term="ksh" /><summary type="html"><![CDATA[Shell environments are fundamental tools for any software engineer, devops practitioner or system administrator. They not only provide an interface to interact with the operating system but also offer a wide variety of in-built functionalities to make scripting and command-line navigation easier and more efficient.]]></summary></entry></feed>
