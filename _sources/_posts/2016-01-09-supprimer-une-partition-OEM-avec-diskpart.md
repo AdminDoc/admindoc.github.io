@@ -2,8 +2,18 @@
 layout: post
 title:  ""
 date:   2019-10-30
-categories: bluetooth
-tags: [bluetooth, ecouteur]
+categories: windows
+banner:
+  volume: 0.8
+  start_at: 8.5
+  image: ./assets/images/2023-10-02-deleteOem
+  opacity: 0.618
+  background: "#000"
+  height: "100vh"
+  min_height: "38vh"
+  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  subheading_style: "color: gold"
+tags: [windows, diskpart]
 ---
 **1)** Ouvrir une invitation de commandes en tant qu'administrateur  
 ![](https://2.bp.blogspot.com/-anMG8Y79dA4/VmIW4TsJtcI/AAAAAAAAEXA/I6uWq2nx1cg/s1600/oem_1.png)  

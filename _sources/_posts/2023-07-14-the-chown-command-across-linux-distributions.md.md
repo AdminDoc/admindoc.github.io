@@ -3,6 +3,16 @@ layout: post
 title:  "The chown Command Across Linux Distributions"
 date:   2023-07-12
 categories: linux
+banner:
+  volume: 0.8
+  start_at: 8.5
+  image: ./assets/images/2023-10-02-chown.webp
+  opacity: 0.618
+  background: "#000"
+  height: "100vh"
+  min_height: "38vh"
+  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  subheading_style: "color: gold"
 tags: [bash]
 toc: true
 toc_sticky: true

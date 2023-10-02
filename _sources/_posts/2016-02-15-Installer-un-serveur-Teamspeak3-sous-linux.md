@@ -3,6 +3,16 @@ layout: post
 title: "Installer un serveur Teamspeak 3 sous Linux"
 date: 2016-02-15
 categories: linux
+banner:
+  volume: 0.8
+  start_at: 8.5
+  image: ./assets/images/2023-10-02-teamspeakLinuxServer.webp
+  opacity: 0.618
+  background: "#000"
+  height: "100vh"
+  min_height: "38vh"
+  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  subheading_style: "color: gold"
 tags: [teamspeak3, linux]
 ---
 Nous allons voir dans cet article comment installer un serveur Teamspeak 3 Sous linux.  

@@ -3,6 +3,16 @@ layout: post
 title:  "A Journey Through Linux: Evolution of Major Distributions and their Most Popular Commands"
 date:   2023-07-18
 categories: linux
+banner:
+  volume: 0.8
+  start_at: 8.5
+  image: ./assets/images/2023-10-02-linuxDistributionTree.webp
+  opacity: 0.618
+  background: "#000"
+  height: "100vh"
+  min_height: "38vh"
+  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  subheading_style: "color: gold"
 tags: [slackware, debian, rhel, arch]
 toc: true
 toc_sticky: true

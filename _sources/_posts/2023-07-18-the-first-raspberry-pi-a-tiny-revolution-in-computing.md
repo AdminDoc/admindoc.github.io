@@ -6,7 +6,7 @@ categories: raspberry
 banner:
   volume: 0.8
   start_at: 8.5
-  image: https://assets.raspberrypi.com/static/8ab48f75acff29d90ad176703ca2454e/b7c7d/hero.webp
+  image: ./assets/images/2023-10-02-raspberryPi.webp
   opacity: 0.618
   background: "#000"
   height: "100vh"

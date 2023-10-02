@@ -3,6 +3,16 @@ layout: post
 title:  "The Expert Guide to iptables: Mastering Network Firewall Configuration"
 date:   2023-07-18
 categories: network
+banner:
+  volume: 0.8
+  start_at: 8.5
+  image: ./assets/images/2023-10-02-iptable.webp
+  opacity: 0.618
+  background: "#000"
+  height: "100vh"
+  min_height: "38vh"
+  heading_style: "font-size: 4.25em; font-weight: bold; text-decoration: underline"
+  subheading_style: "color: gold"
 tags: [monitoring, linux]
 toc: true
 toc_sticky: true
